@@ -1,3 +1,5 @@
+create database wvp2;
+use wvp2;
 /*建表*/
 create table wvp_device
 (
