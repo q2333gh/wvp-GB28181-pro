@@ -1,6 +1,7 @@
 package com.genersoft.iot.vmp.streamPush.bean;
 
 import com.genersoft.iot.vmp.common.StreamInfo;
+import com.genersoft.iot.vmp.common.enums.ChannelDataType;
 import com.genersoft.iot.vmp.gb28181.bean.CommonGBChannel;
 import com.genersoft.iot.vmp.media.event.media.MediaArrivalEvent;
 import com.genersoft.iot.vmp.utils.DateUtil;
@@ -76,7 +77,33 @@ public class StreamPush extends CommonGBChannel implements Comparable<StreamPush
     @Schema(description = "拉起离线推流")
     private boolean startOfflinePush;
 
+    /**
+     * 速度,单位:km/h (可选)
+     */
+    @Schema(description = "GPS的速度")
+    private Double gpsSpeed;
+
+    /**
+     * 方向,取值为当前摄像头方向与正北方的顺时针夹角,取值范围0°~360°,单位:(°)(可选)
+     */
+    @Schema(description = "GPS的方向")
+    private Double gpsDirection;
+
+    /**
+     * 海拔高度,单位:m(可选)
+     */
+    @Schema(description = "GPS的海拔高度")
+    private Double gpsAltitude;
+
+    /**
+     * GPS的更新时间
+     */
+    @Schema(description = "GPS的更新时间")
+    private String gpsTime;
+
     private String uniqueKey;
+
+    private Integer dataType = ChannelDataType.STREAM_PUSH.value;
 
     @Override
     public int compareTo(@NotNull StreamPush streamPushItem) {
@@ -115,7 +142,8 @@ public class StreamPush extends CommonGBChannel implements Comparable<StreamPush
         if (ObjectUtils.isEmpty(this.getGbName())) {
             this.setGbName( app+ "-" +stream);
         }
-        this.setStreamPushId(this.getId());
+        this.setDataType(ChannelDataType.STREAM_PUSH.value);
+        this.setDataDeviceId(this.getId());
         return this;
     }
 

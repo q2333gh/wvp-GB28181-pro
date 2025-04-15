@@ -25,9 +25,7 @@
                 <el-select size="mini" style="width: 8rem; margin-right: 1rem;" @change="search" v-model="channelType" placeholder="请选择"
                            default-first-option>
                   <el-option label="全部" value=""></el-option>
-                  <el-option label="国标设备" :value="0"></el-option>
-                  <el-option label="推流设备" :value="1"></el-option>
-                  <el-option label="拉流代理" :value="2"></el-option>
+                  <el-option v-for="item in Object.values($channelTypeList)" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
                 <el-button v-if="hasLink !=='true'" size="mini" type="primary" @click="add()">
                   添加
@@ -37,8 +35,8 @@
                 </el-button>
                 <el-button size="mini" v-if="hasLink !=='true'" @click="addByDevice()">按设备添加</el-button>
                 <el-button size="mini" v-if="hasLink ==='true'" @click="removeByDevice()">按设备移除</el-button>
-                <el-button size="mini" v-if="hasLink !=='true'" @click="addAll()">全部添加</el-button>
-                <el-button size="mini" v-if="hasLink ==='true'" @click="removeAll()">全部移除</el-button>
+                <el-button size="mini" v-if="hasLink !=='true'" @click="addAll()">添加所有通道</el-button>
+                <el-button size="mini" v-if="hasLink ==='true'" @click="removeAll()">移除所有通道</el-button>
                 <el-button size="mini" @click="getChannelList()">刷新</el-button>
               </div>
             </div>
@@ -56,9 +54,7 @@
             <el-table-column label="类型" min-width="100">
               <template v-slot:default="scope">
                 <div slot="reference" class="name-wrapper">
-                  <el-tag size="medium" effect="plain" v-if="scope.row.gbDeviceDbId">国标设备</el-tag>
-                  <el-tag size="medium" effect="plain" type="success" v-if="scope.row.streamPushId">推流设备</el-tag>
-                  <el-tag size="medium" effect="plain" type="warning" v-if="scope.row.streamProxyId">拉流代理</el-tag>
+                  <el-tag size="medium" effect="plain" type="success" :style="$channelTypeList[scope.row.dataType].style">{{$channelTypeList[scope.row.dataType].name}}</el-tag>
                 </div>
               </template>
             </el-table-column>
@@ -218,7 +214,7 @@ export default {
       })
     },
     addAll: function (row) {
-      this.$confirm("确定全部添加？", '提示', {
+      this.$confirm("添加所有通道将包括已经添加到其他计划的通道，确定添加所有通道？", '提示', {
         dangerouslyUseHTMLString: true,
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -275,7 +271,7 @@ export default {
     },
     removeAll: function (row) {
 
-      this.$confirm("确定全部移除？", '提示', {
+      this.$confirm("确定移除所有通道？", '提示', {
         dangerouslyUseHTMLString: true,
         confirmButtonText: '确定',
         cancelButtonText: '取消',

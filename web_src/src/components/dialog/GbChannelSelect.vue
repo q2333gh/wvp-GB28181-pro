@@ -26,9 +26,7 @@
           <el-select size="mini" style="width: 8rem; margin-right: 1rem;" @change="getChannelList" v-model="channelType" placeholder="请选择"
                      default-first-option>
             <el-option label="全部" value=""></el-option>
-            <el-option label="国标设备" :value="0"></el-option>
-            <el-option label="推流设备" :value="1"></el-option>
-            <el-option label="拉流代理" :value="2"></el-option>
+            <el-option v-for="item in Object.values($channelTypeList)" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
           <el-button size="mini" :loading="getChannelListLoading"
                      @click="getChannelList()">刷新</el-button>
@@ -49,9 +47,7 @@
         <el-table-column label="类型" min-width="100">
           <template v-slot:default="scope">
             <div slot="reference" class="name-wrapper">
-              <el-tag size="medium" effect="plain" v-if="scope.row.gbDeviceDbId">国标设备</el-tag>
-              <el-tag size="medium" effect="plain" type="success" v-if="scope.row.streamPushId">推流设备</el-tag>
-              <el-tag size="medium" effect="plain" type="warning" v-if="scope.row.streamProxyId">拉流代理</el-tag>
+              <el-tag size="medium" effect="plain" type="success" :style="$channelTypeList[scope.row.dataType].style" >{{$channelTypeList[scope.row.dataType].name}}</el-tag>
             </div>
           </template>
         </el-table-column>
@@ -64,21 +60,28 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination
-        style="text-align: right"
-        @size-change="handleSizeChange"
-        @current-change="currentChange"
-        :current-page="currentPage"
-        :page-size="count"
-        :page-sizes="[10, 25, 35, 50, 200, 1000, 50000]"
-        layout="total, sizes, prev, pager, next"
-        :total="total">
-      </el-pagination>
+      <div style="display: grid; grid-template-columns: 1fr 1fr">
+        <div style="text-align: left; line-height: 32px">
+          <i class="el-icon-info"></i> 未找到通道，可在国标设备/通道中选择编辑按钮， 选择{{dataType === 'civilCode'?'行政区划':'父节点编码'}}
+        </div>
+        <el-pagination
+          style="text-align: right"
+          @size-change="handleSizeChange"
+          @current-change="currentChange"
+          :current-page="currentPage"
+          :page-size="count"
+          :page-sizes="[10, 25, 35, 50, 200, 1000, 50000]"
+          layout="total, sizes, prev, pager, next"
+          :total="total">
+        </el-pagination>
+      </div>
+
     </el-dialog>
   </div>
 </template>
 
 <script>
+
 
 export default {
   name: "gbChannelSelect",
